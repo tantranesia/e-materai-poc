@@ -19,9 +19,11 @@ import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 import { Badge } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { FiChevronDown, FiEdit, FiFilter, FiPlus } from 'react-icons/fi';
+import { useMediaQuery } from '@chakra-ui/media-query';
+import { useTheme } from '@chakra-ui/system';
+
 import useOverview from '../hooks/useOverview';
 import useDistributor from '../hooks/useDistributor';
-
 import Header from '../components/Header';
 
 function Distributor() {
@@ -30,6 +32,10 @@ function Distributor() {
   const [data, setData] = useState([]);
   const [date, setDate] = useState([]);
   const [type, setType] = useState(['date']);
+  const theme = useTheme();
+  const [isSmallerThan768] = useMediaQuery(
+    `(max-width : ${theme.sizes.container.md})`
+  );
   const setDetails = () => {
     distributor?.data?.rows?.map((col) => {
       const final = col.buyer.waktuMulai;
@@ -202,7 +208,7 @@ function Distributor() {
             </Button>
           </HStack>
         </HStack>
-        <Table variant="simple">
+        <Table variant="simple" size={isSmallerThan768 ? 'sm' : 'md'} overflow="auto">
           <Thead>
             <Tr>
               <Th>No</Th>
@@ -218,7 +224,7 @@ function Distributor() {
                 return (
                   <Tr>
                     <Td>1</Td>
-                    <Td>{col.namaDepan + col.namaBelakang}</Td>
+                    <Td>{col.namaDepan + ' ' + col.namaBelakang}</Td>
                     <Td>{col.Company.perusahaan}</Td>
                     <Td>{col.Company.surel}</Td>
                     <Td>{__renderBadge(col.statusKeaktifan)}</Td>
