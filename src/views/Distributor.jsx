@@ -33,11 +33,25 @@ function Distributor() {
   const [data, setData] = useState([]);
   const [date, setDate] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [count, setCount] = useState(0);
   const theme = useTheme();
   const [isSmallerThan768] = useMediaQuery(
     `(max-width : ${theme.sizes.container.md})`
   );
+  const [isLargerThan1200] = useMediaQuery(
+    `(min-height : ${theme.sizes.container.xl})`
+  );
   const token = localStorage.getItem('token');
+
+  const number = () => {
+    // for (var count = 0; count > distributor.data.rows.length; count++) {
+    //   setCount(count)
+    //   return count;
+    // }
+    const n = distributor.data.rows.length
+
+  };
+  const arr = [distributor.length];
 
   useEffect(() => {
     axios
@@ -109,7 +123,12 @@ function Distributor() {
   };
 
   return (
-    <Box backgroundColor="#F6F6F6">
+    <Box backgroundColor="#F6F6F6" minH={[
+      'container.sm',
+      'container.md',
+      'container.lg',
+      'container.xl',
+    ]}>
       <Header />
       <Container
         maxW={[
@@ -258,7 +277,9 @@ function Distributor() {
                 distributor.data.rows.map((col) => {
                   return (
                     <Tr>
-                      <Td>1</Td>
+                      <Td>{
+                  
+                      }</Td>
                       <Td>{col.namaDepan + ' ' + col.namaBelakang}</Td>
                       <Td>{col.Company.perusahaan}</Td>
                       <Td>{col.Company.surel}</Td>
@@ -280,7 +301,7 @@ function Distributor() {
               {data.map((col) => {
                 return (
                   <Tr>
-                    <Td>1</Td>
+                    <Td>{distributor.data.rows.length}</Td>
                     <Td>{col.namaDepan + ' ' + col.namaBelakang}</Td>
                     <Td>{col.Company.perusahaan}</Td>
                     <Td>{col.Company.surel}</Td>

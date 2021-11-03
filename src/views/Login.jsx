@@ -12,6 +12,7 @@ import {
   Icon,
 } from '@chakra-ui/react';
 import { FormControl, FormLabel } from '@chakra-ui/form-control';
+import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useMutation } from 'react-query';
 
@@ -23,6 +24,7 @@ function Login() {
     surel: '',
     sandi: '',
   });
+  const { register, handleSubmit } = useForm(user);
   const [show, setShow] = useState(false);
   const toggleShow = () => {
     setShow(show ? false : true);
@@ -32,7 +34,7 @@ function Login() {
     axios
       .put(
         'https://wwb6j89602.execute-api.ap-southeast-1.amazonaws.com/dev/user/login',
-        user
+        register.user
       )
       .then((response) => {
         return response;
@@ -45,25 +47,25 @@ function Login() {
       });
   });
 
-  const handleSubmit = (e) => {
-    if (user.sandi === '' || user.surel === '') {
-      return alert('Email or password cannot be empty!');
-    } else if (!/\S+@\S+\.\S+/.test(user.surel)) {
-      return alert('Email address is invalid');
-    }
-    e.preventDefault();
+  const onSubmit = () => {
+    // if (user.sandi === '' || user.surel === '') {
+    //   return alert('Email or password cannot be empty!');
+    // } else if (!/\S+@\S+\.\S+/.test(user.surel)) {
+    //   return alert('Email address is invalid');
+    // }
+    // e.preventDefault();
     mutation.mutate(user);
   };
 
   return (
-    <Box>
+    <Box minH={['container.sm', 'container.md', 'container.lg']}>
       <Flex>
         <VStack width="50%" position="relative">
           <Box
             bgImage="url(https://res.cloudinary.com/doqopynok/image/upload/v1635655495/MicrosoftTeams-image_2_ykix9n.png)"
             width="full"
             height="full"
-            minHeight="full"
+            minH={['container.sm', 'container.md', 'container.lg']}
             bgSize="cover"
             objectPosition="center"
           >
@@ -101,7 +103,7 @@ function Login() {
             <Text fontSize="2xl" fontWeight="bold">
               Sign In
             </Text>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <FormControl pb="5">
                 <FormLabel color="#B6B9BF" fontSize="sm" pt="6">
                   Email
@@ -109,7 +111,7 @@ function Login() {
                 <Input
                   placeholder="Email"
                   bgColor="#FFFFFF"
-                  onChange={(e) => setUser({ ...user, surel: e.target.value })}
+                  inputRef={register('surel').user}
                   variant="unstyled"
                   px="2"
                   py="2"
@@ -123,9 +125,7 @@ function Login() {
                     type={show ? 'text' : 'password'}
                     bgColor="transparent"
                     border="none"
-                    onChange={(e) =>
-                      setUser({ ...user, sandi: e.target.value })
-                    }
+                    inputRef={register('sandi').user}
                     variant="unstyled"
                     px="2"
                     py="2"
