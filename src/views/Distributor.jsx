@@ -55,6 +55,25 @@ function Distributor() {
       });
   }, []);
 
+  const dummy = [
+    {
+      namaDepan: 'Ary',
+      eat: 'mekdi',
+    },
+    {
+      namaDepan: 'Bry',
+      eat: 'mekdi',
+    },
+    {
+      namaDepan: 'Cry',
+      eat: 'mekdi',
+    },
+    {
+      namaDepan: 'Dry',
+      eat: 'mekdi',
+    },
+  ];
+
   const sortAscending = (key) => {
     console.log(key);
     setSelected(key);
@@ -67,9 +86,11 @@ function Distributor() {
   const sortDescanding = (key) => {
     setSelected(key);
     console.log(key);
-    const descending = date.sort((a, b) => {
-      return b.namaDepan - a.namaDepan;
-    });
+    const descending = date
+      .sort((a, b) => {
+        return a.namaDepan - b.namaDepan;
+      })
+      .reverse();
     setData(descending);
   };
 
