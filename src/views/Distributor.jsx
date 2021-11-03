@@ -58,16 +58,16 @@ function Distributor() {
       )
       .then((res) => {
         console.log(res.data.data.rows);
-        setDate(res.data.data.rows)
-      })
-    
+        setDate(res.data.data.rows);
+      });
+
     const sortAscending = (label) => {
-      console.log(label);
       const labels = {
         date: 'date',
         status: 'status',
       };
       const sortParam = labels[label];
+      console.log(sortParam);
       const ascending = date.sort((a, b) => a[sortParam] - b[sortParam]);
       setData(ascending);
     };
@@ -78,9 +78,7 @@ function Distributor() {
         status: 'status',
       };
       const sortParam = labels[label];
-      const descending = date.sort(
-        (a, b) => b[sortParam] - a[sortParam]
-      );
+      const descending = date.sort((a, b) => b[sortParam] - a[sortParam]);
       setData(descending);
     };
     sortAscending(type);
@@ -237,9 +235,9 @@ function Distributor() {
               <Th>Status</Th>
             </Tr>
           </Thead>
-          <Tbody>
-            {distributor.isSuccess ? (
-              distributor.data.rows.map((col) => {
+          {type === 'date' || 'status' ? (
+            <Tbody>
+              {data.map((col) => {
                 return (
                   <Tr>
                     <Td>1</Td>
@@ -252,13 +250,32 @@ function Distributor() {
                     </Td>
                   </Tr>
                 );
-              })
-            ) : (
-              <Box>
-                <Text>Loading...</Text>
-              </Box>
-            )}
-          </Tbody>
+              })}
+            </Tbody>
+          ) : (
+            <Tbody>
+              {distributor.isSuccess ? (
+                distributor.data.rows.map((col) => {
+                  return (
+                    <Tr>
+                      <Td>1</Td>
+                      <Td>{col.namaDepan + ' ' + col.namaBelakang}</Td>
+                      <Td>{col.Company.perusahaan}</Td>
+                      <Td>{col.Company.surel}</Td>
+                      <Td>{__renderBadge(col.statusKeaktifan)}</Td>
+                      <Td>
+                        <FiEdit />
+                      </Td>
+                    </Tr>
+                  );
+                })
+              ) : (
+                <Box>
+                  <Text>Loading...</Text>
+                </Box>
+              )}
+            </Tbody>
+          )}
         </Table>
       </Container>
     </Box>
