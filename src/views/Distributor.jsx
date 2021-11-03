@@ -32,19 +32,12 @@ function Distributor() {
   const distributor = useDistributor({});
   const [data, setData] = useState([]);
   const [date, setDate] = useState([]);
-  const [type, setType] = useState(['date']);
+  const [selected, setSelected] = useState(null);
   const theme = useTheme();
   const [isSmallerThan768] = useMediaQuery(
     `(max-width : ${theme.sizes.container.md})`
   );
   const token = localStorage.getItem('token');
-  // const setDetails = async () => {
-  //   distributor.isSuccess
-  //     ? await distributor.data.rows.map((col) => {
-  //         return setDate(col.namaDepan);
-  //       })
-  //     : console.log('Error');
-  // };
 
   useEffect(() => {
     axios
@@ -60,30 +53,26 @@ function Distributor() {
         console.log(res.data.data.rows);
         setDate(res.data.data.rows);
       });
+  }, []);
 
-    const sortAscending = (label) => {
-      const labels = {
-        date: 'date',
-        status: 'status',
-      };
-      const sortParam = labels[label];
-      console.log(sortParam);
-      const ascending = date.sort((a, b) => a[sortParam] - b[sortParam]);
-      setData(ascending);
-    };
+  const sortAscending = (key) => {
+    console.log(key);
+    setSelected(key);
+    const ascending = date.sort((a, b) => {
+      return a.namaDepan - b.namaDepan;
+    });
+    setData(ascending);
+  };
 
-    const sortDescanding = (label) => {
-      const labels = {
-        date: 'date',
-        status: 'status',
-      };
-      const sortParam = labels[label];
-      const descending = date.sort((a, b) => b[sortParam] - a[sortParam]);
-      setData(descending);
-    };
-    sortAscending(type);
-    sortDescanding(type);
-  }, [type]);
+  const sortDescanding = (key) => {
+    setSelected(key);
+    console.log(key);
+    const descending = date.sort((a, b) => {
+      return b.namaDepan - a.namaDepan;
+    });
+    setData(descending);
+  };
+
   const __renderBadge = (status) => {
     const label = {
       true: (
@@ -200,14 +189,21 @@ function Distributor() {
               <MenuList>
                 <MenuGroup>
                   <ButtonGroup size="sm" isAttached variant="outline" px="2">
-                    <Button>Ascending</Button>
-                    <Button>Descending</Button>
+                    <Button data-key="asc" onClick={() => sortAscending('asc')}>
+                      Ascending
+                    </Button>
+                    <Button
+                      data-key="dsc"
+                      onClick={() => sortDescanding('dsc')}
+                    >
+                      Descending
+                    </Button>
                   </ButtonGroup>
                 </MenuGroup>
                 <MenuGroup title="Sort By">
                   <Menu as={Button} rightIcon={<FiChevronDown />}>
                     <MenuButton px="4">Date Purchased</MenuButton>
-                    <MenuList onChange={(e) => setType(e.target.value)}>
+                    <MenuList>
                       <MenuItem value="date">Date Purchased</MenuItem>
                       <MenuItem value="status">Status</MenuItem>
                     </MenuList>
@@ -235,24 +231,7 @@ function Distributor() {
               <Th>Status</Th>
             </Tr>
           </Thead>
-          {type === 'date' || 'status' ? (
-            <Tbody>
-              {data.map((col) => {
-                return (
-                  <Tr>
-                    <Td>1</Td>
-                    <Td>{col.namaDepan + ' ' + col.namaBelakang}</Td>
-                    <Td>{col.Company.perusahaan}</Td>
-                    <Td>{col.Company.surel}</Td>
-                    <Td>{__renderBadge(col.statusKeaktifan)}</Td>
-                    <Td>
-                      <FiEdit />
-                    </Td>
-                  </Tr>
-                );
-              })}
-            </Tbody>
-          ) : (
+          {selected === null ? (
             <Tbody>
               {distributor.isSuccess ? (
                 distributor.data.rows.map((col) => {
@@ -274,6 +253,23 @@ function Distributor() {
                   <Text>Loading...</Text>
                 </Box>
               )}
+            </Tbody>
+          ) : (
+            <Tbody>
+              {data.map((col) => {
+                return (
+                  <Tr>
+                    <Td>1</Td>
+                    <Td>{col.namaDepan + ' ' + col.namaBelakang}</Td>
+                    <Td>{col.Company.perusahaan}</Td>
+                    <Td>{col.Company.surel}</Td>
+                    <Td>{__renderBadge(col.statusKeaktifan)}</Td>
+                    <Td>
+                      <FiEdit />
+                    </Td>
+                  </Tr>
+                );
+              })}
             </Tbody>
           )}
         </Table>
