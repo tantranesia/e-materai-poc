@@ -21,6 +21,7 @@ import React, { useState, useEffect } from 'react';
 import { FiChevronDown, FiEdit, FiFilter, FiPlus } from 'react-icons/fi';
 import { useMediaQuery } from '@chakra-ui/media-query';
 import { useTheme } from '@chakra-ui/system';
+import axios from 'axios';
 
 import useOverview from '../hooks/useOverview';
 import useDistributor from '../hooks/useDistributor';
@@ -36,41 +37,55 @@ function Distributor() {
   const [isSmallerThan768] = useMediaQuery(
     `(max-width : ${theme.sizes.container.md})`
   );
-  const setDetails = () => {
-    distributor?.data?.rows?.map((col) => {
-      const final = col.buyer.waktuMulai;
-      setDate(final);
-    });
-    console.log(date, 'cek');
-  };
+  const token = localStorage.getItem('token');
+  // const setDetails = async () => {
+  //   distributor.isSuccess
+  //     ? await distributor.data.rows.map((col) => {
+  //         return setDate(col.namaDepan);
+  //       })
+  //     : console.log('Error');
+  // };
 
   useEffect(() => {
-    setDetails();
-    //     const sortAscending = (label) => {
-    //         console.log(label);
-    //         const labels = {
-    //             date: 'date',
-    //             status: 'status'
-    //         }
-    //         const sortParam = labels[label]
-    //         const ascending = distributor.data.rows.buyer.waktuMulai.sort((a, b) => a[sortParam] - b[sortParam])
-    //         setData(ascending)
+    axios
+      .get(
+        'https://wwb6j89602.execute-api.ap-southeast-1.amazonaws.com/dev/buyer?sort=name&filter=all&page=1',
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data.data.rows);
+        setDate(res.data.data.rows)
+      })
+    
+    const sortAscending = (label) => {
+      console.log(label);
+      const labels = {
+        date: 'date',
+        status: 'status',
+      };
+      const sortParam = labels[label];
+      const ascending = date.sort((a, b) => a[sortParam] - b[sortParam]);
+      setData(ascending);
+    };
 
-    //     }
-
-    //     const sortDescanding = (label) => {
-    //         const labels = {
-    //             date: 'date',
-    //             status: 'status'
-    //         }
-    //         const sortParam = labels[label]
-    //         const descending = distributor.data.rows.buyer.waktuMulai.sort((a, b) => b[sortParam] - a[sortParam])
-    //         setData(descending)
-
-    //     }
-    //     sortAscending(type)
-    //     sortDescanding(type)
-  }, []);
+    const sortDescanding = (label) => {
+      const labels = {
+        date: 'date',
+        status: 'status',
+      };
+      const sortParam = labels[label];
+      const descending = date.sort(
+        (a, b) => b[sortParam] - a[sortParam]
+      );
+      setData(descending);
+    };
+    sortAscending(type);
+    sortDescanding(type);
+  }, [type]);
   const __renderBadge = (status) => {
     const label = {
       true: (
@@ -208,7 +223,11 @@ function Distributor() {
             </Button>
           </HStack>
         </HStack>
-        <Table variant="simple" size={isSmallerThan768 ? 'sm' : 'md'} overflow="auto">
+        <Table
+          variant="simple"
+          size={isSmallerThan768 ? 'sm' : 'md'}
+          overflow="auto"
+        >
           <Thead>
             <Tr>
               <Th>No</Th>
