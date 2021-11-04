@@ -48,8 +48,7 @@ function Distributor() {
     //   setCount(count)
     //   return count;
     // }
-    const n = distributor.data.rows.length
-
+    const n = distributor.data.rows.length;
   };
   const arr = [distributor.length];
 
@@ -123,12 +122,10 @@ function Distributor() {
   };
 
   return (
-    <Box backgroundColor="#F6F6F6" minH={[
-      'container.sm',
-      'container.md',
-      'container.lg',
-      'container.xl',
-    ]}>
+    <Box
+      backgroundColor="#F6F6F6"
+      minH={['container.sm', 'container.md', 'container.lg', 'container.xl']}
+    >
       <Header />
       <Container
         maxW={[
@@ -274,12 +271,10 @@ function Distributor() {
           {selected === null ? (
             <Tbody>
               {distributor.isSuccess ? (
-                distributor.data.rows.map((col) => {
+                distributor.data.rows.map((col, index) => {
                   return (
                     <Tr>
-                      <Td>{
-                  
-                      }</Td>
+                      <Td>{index + 1}</Td>
                       <Td>{col.namaDepan + ' ' + col.namaBelakang}</Td>
                       <Td>{col.Company.perusahaan}</Td>
                       <Td>{col.Company.surel}</Td>

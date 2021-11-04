@@ -29,12 +29,12 @@ function Login() {
   const toggleShow = () => {
     setShow(show ? false : true);
   };
-  const mutation = useMutation((user) => {
-    console.log(user, 'cek user');
+  const createLogin = async () => {
+    const response = 
     axios
       .put(
         'https://wwb6j89602.execute-api.ap-southeast-1.amazonaws.com/dev/user/login',
-        register.user
+        user
       )
       .then((response) => {
         return response;
@@ -45,6 +45,11 @@ function Login() {
         console.log(token);
         window.location.href = '/home';
       });
+
+  }
+  const mutation = useMutation((user) => {
+    console.log(user, 'cek user');
+    
   });
 
   const onSubmit = () => {
@@ -111,7 +116,7 @@ function Login() {
                 <Input
                   placeholder="Email"
                   bgColor="#FFFFFF"
-                  inputRef={register('surel').user}
+                  {...register('surel').user}
                   variant="unstyled"
                   px="2"
                   py="2"
@@ -125,7 +130,7 @@ function Login() {
                     type={show ? 'text' : 'password'}
                     bgColor="transparent"
                     border="none"
-                    inputRef={register('sandi').user}
+                    {...register('sandi').user}
                     variant="unstyled"
                     px="2"
                     py="2"
